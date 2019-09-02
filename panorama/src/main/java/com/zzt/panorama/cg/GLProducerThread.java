@@ -8,6 +8,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by Android_ZzT on 2018/8/1.
+ * <p>
+ * 提供 Egl context 的渲染线程
+ * 1.绑定了简单的消息队列 {@link GLEventHandler}
+ * 2.通过 {@link EglHelper} 管理Egl相关操作
  */
 public class GLProducerThread extends Thread {
 
@@ -42,28 +46,36 @@ public class GLProducerThread extends Thread {
 		mRenderMode = renderMode;
 	}
 
+	/**
+	 * 控制线程是否保持循环处理任务队列
+	 *
+	 * @param shouldRender
+	 */
 	public void setShouldRender(boolean shouldRender) {
 		mShouldRender.set(shouldRender);
 	}
 
+	/**
+	 * 向线程入队一个任务
+	 *
+	 * @param runnable
+	 */
 	public void enqueueEvent(Runnable runnable) {
 		mEventHandler.enqueueEvent(runnable);
 	}
 
+	/**
+	 * 控制线程循环暂停
+	 */
 	public void onPause() {
 		mIsPaused = true;
 	}
 
+	/**
+	 * 控制线程循环继续
+	 */
 	public void onResume() {
 		mIsPaused = false;
-		requestRender();
-	}
-
-	public void onDestroy() {
-		enqueueEvent(() -> {
-			mEGLHelper.releaseEGLContext();
-			setShouldRender(false);
-		});
 		requestRender();
 	}
 
@@ -97,11 +109,8 @@ public class GLProducerThread extends Thread {
 
 				mEGLHelper.swapBuffers();
 
-				// 1.凡是onPause都要停止，2.如果是onResume的状态，如果是循环刷新则会继续下一次循环，否则会暂停等待调用requestRender()
 				if (mIsPaused) {
 					pauseLoop();
-				} else {
-
 				}
 
 				Thread.sleep(5);//预防帧数过高，手机发热

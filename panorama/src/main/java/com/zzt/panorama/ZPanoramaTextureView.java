@@ -9,7 +9,6 @@ import android.graphics.SurfaceTexture;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.TextureView;
 import android.widget.FrameLayout;
 
@@ -22,6 +21,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by Android_ZzT on 2018/8/1.
+ * <p>
+ * 显示全景图的控件
+ * <p>
+ * 支持功能:
+ * 1.设置图片url，下载图片内容并显示图片 {@link #setBitmapUrl(String)}}
+ * 2.设置陀螺仪是否可用{@link #setGyroTrackingEnabled(boolean)}
+ * 3.回到图片初始角度{@link #reCenter()}
  */
 public class ZPanoramaTextureView extends FrameLayout implements TextureView.SurfaceTextureListener {
 
@@ -65,35 +71,92 @@ public class ZPanoramaTextureView extends FrameLayout implements TextureView.Sur
 		}
 	}
 
+	/**
+	 * 设置陀螺仪是否可用，默认可用
+	 *
+	 * @param enabled
+	 */
 	public void setGyroTrackingEnabled(boolean enabled) {
 		mRenderer.enableGyroTracking(enabled);
 	}
 
+	/**
+	 * 回到图片初始角度
+	 */
 	public void reCenter() {
 		mRenderer.reCenter();
 	}
 
+	/**
+	 * 设置要加载的图片地址，需要
+	 *
+	 * @param url
+	 */
 	public void setBitmapUrl(@NonNull String url) {
 		mCurrentBitmapUrl = url;
 	}
 
-	public void onResume() {
-		if (mGLThread != null) {
-			LogHelper.d(TAG, "onResume");
-			mGLThread.onResume();
+	@Override
+	protected void onAttachedToWindow() {
+		super.onAttachedToWindow();
+		LogHelper.d(TAG, "onAttachedToWindow");
+		mRenderer.onAttached();
+	}
+
+	@Override
+	protected void onDetachedFromWindow() {
+		super.onDetachedFromWindow();
+		LogHelper.d(TAG, "onDetachedFromWindow");
+		mRenderer.onDetached();
+		if (mIsGLThreadAvailable) {
+			mGLThread.enqueueEvent(() -> {
+				mGLThread.releaseEglContext();
+			});
 		}
 	}
 
-	public void onPause() {
-		if (mGLThread != null) {
-			mGLThread.onPause();
+	@Override
+	public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) { //detached 以后再 attached 还会回调此方法
+		if (!mIsGLThreadAvailable) { //确保从后台回来的时候只调用一次，只初始化一条 GLProducerThread
+			mIsGLThreadAvailable = true;
+			mGLThread = new GLProducerThread(surface, mRenderer, new AtomicBoolean(true));
+			mGLThread.start();
+
+			mGLThread.enqueueEvent(() ->
+					mRenderer.onSurfaceChanged(width, height)
+			);
+
+			loadBitmapFromCurrentUrl();
+		} else {
+			mGLThread.refreshSurfaceTexture(surface);
+			changeBitmapFromCurrentUrl();
+			if (mGLThread != null) {
+				LogHelper.d(TAG, "onResume");
+				mGLThread.onResume();
+			}
 		}
 	}
 
-	public void onDestroy() {
-		if (mGLThread != null) {
-			mGLThread.onDestroy();
+	@Override
+	public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+		mGLThread.enqueueEvent(() ->
+				mRenderer.onSurfaceChanged(width, height)
+		);
+	}
+
+	@Override
+	public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+		if (mIsGLThreadAvailable) {
+			if (mGLThread != null) {
+				mGLThread.onPause();
+			}
 		}
+		return true;
+	}
+
+	@Override
+	public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+
 	}
 
 	private void loadBitmapFromCurrentUrl() {
@@ -138,63 +201,5 @@ public class ZPanoramaTextureView extends FrameLayout implements TextureView.Sur
 				mRenderer.changeTextureBitmap(bitmap);
 			});
 		}
-	}
-
-	@Override
-	protected void onAttachedToWindow() {
-		super.onAttachedToWindow();
-		LogHelper.d(TAG, "onAttachedToWindow");
-		mRenderer.onAttached();
-	}
-
-	@Override
-	protected void onDetachedFromWindow() {
-		super.onDetachedFromWindow();
-		LogHelper.d(TAG, "onDetachedFromWindow");
-		mRenderer.onDetached();
-		if (mIsGLThreadAvailable) {
-			mGLThread.enqueueEvent(() -> {
-				mGLThread.releaseEglContext();
-			});
-		}
-	}
-
-	@Override
-	public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) { //detached 以后再 attached 还会回调此方法
-		if (!mIsGLThreadAvailable) { //确保从后台回来的时候只调用一次
-			mIsGLThreadAvailable = true;
-			mGLThread = new GLProducerThread(surface, mRenderer, new AtomicBoolean(true));
-			mGLThread.start();
-
-			mGLThread.enqueueEvent(() ->
-					mRenderer.onSurfaceChanged(width, height)
-			);
-
-			loadBitmapFromCurrentUrl();
-		} else { //TextureView destroy 以后
-			mGLThread.refreshSurfaceTexture(surface);
-			changeBitmapFromCurrentUrl();
-			onResume();
-		}
-	}
-
-	@Override
-	public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-		mGLThread.enqueueEvent(() ->
-				mRenderer.onSurfaceChanged(width, height)
-		);
-	}
-
-	@Override
-	public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-		if (mIsGLThreadAvailable) {
-			onPause();
-		}
-		return true;
-	}
-
-	@Override
-	public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-
 	}
 }

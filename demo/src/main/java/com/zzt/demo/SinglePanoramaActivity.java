@@ -17,7 +17,6 @@ public class SinglePanoramaActivity extends AppCompatActivity {
 	private static final String TAG = SinglePanoramaActivity.class.getSimpleName();
 	private static final String IMAGE_URL = "https://d22779be5rhkgh.cloudfront.net/_w9QbsGPj6JmY8pdkR2Pjw/thumbnails/360_180_source_102.jpg-video.vr.medium";
 
-	private FrameLayout mPanoramaContainer;
 	private ZPanoramaTextureView mPanoramaTextureView;
 	private Button mBtnGyroController;
 
@@ -26,13 +25,11 @@ public class SinglePanoramaActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.act_single_panorama);
 
-		mPanoramaContainer = findViewById(R.id.panorama_container);
+		mPanoramaTextureView = findViewById(R.id.panorama);
 		mBtnGyroController = findViewById(R.id.btn_gyro_controller);
 
-		mPanoramaTextureView = new ZPanoramaTextureView(this);
 		mPanoramaTextureView.setBitmapUrl(IMAGE_URL);
 		mPanoramaTextureView.setGyroTrackingEnabled(true);
-		mPanoramaContainer.addView(mPanoramaTextureView);
 
 		mBtnGyroController.setTag(true);
 		mBtnGyroController.setText("关闭陀螺仪");

@@ -25,11 +25,16 @@ import static com.zzt.panorama.cg.AbstractMesh.COORDINATES_PER_VERTEX;
 
 /**
  * Created by Android_ZzT on 2018/8/1.
+ * <p>
+ * 球模型渲染器，主要负责球的绘制，陀螺仪监听，计算旋转矩阵，ModelViewProjection矩阵
  */
 public class SphereRenderer implements IGLTextureRenderer, SensorEventListener {
 
 	private static final String TAG = SphereRenderer.class.getSimpleName();
 
+	/**
+	 * cg attrs
+	 */
 	private Sphere mSphere;
 
 	private Texture mTexture;
@@ -44,18 +49,8 @@ public class SphereRenderer implements IGLTextureRenderer, SensorEventListener {
 	 * gl attrs
 	 */
 	private int mProgramHandle;
-
 	private int mVertexShaderHandle;
-
 	private int mFragmentShaderHandle;
-
-	private float[] mRotationMatrix = new float[]{
-			1, 0, 0, 0,
-			0, 1, 0, 0,
-			0, 0, 1, 0,
-			0, 0, 0, 0
-	};
-	private float[] mBiasMatrix = new float[16];
 
 	/**
 	 * gyro sensor attrs
@@ -65,9 +60,16 @@ public class SphereRenderer implements IGLTextureRenderer, SensorEventListener {
 
 	private boolean mFirstFrameFlag = true;
 	private boolean mIsGyroTrackingEnabled;
+	private float[] mRotVecValues = null;
+	private float[] mRotationQuaternion = new float[4];
 
-	private float[] rotVecValues = null;
-	private float[] rotationQuaternion = new float[4];
+	private float[] mRotationMatrix = new float[]{
+			1, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 0
+	};
+	private float[] mBiasMatrix = new float[16];
 
 	private WeakReference<Context> mContextWeakReference;
 
@@ -152,16 +154,16 @@ public class SphereRenderer implements IGLTextureRenderer, SensorEventListener {
 				float[] orientationMatrix = new float[16];
 				Matrix.setIdentityM(orientationMatrix, 0);
 
-				if (rotVecValues == null) {
-					rotVecValues = new float[event.values.length];
+				if (mRotVecValues == null) {
+					mRotVecValues = new float[event.values.length];
 				}
-				for (int i = 0; i < rotVecValues.length; i++) {
-					rotVecValues[i] = event.values[i];
+				for (int i = 0; i < mRotVecValues.length; i++) {
+					mRotVecValues[i] = event.values[i];
 				}
 
-				if (rotVecValues != null) {
-					SensorManager.getQuaternionFromVector(rotationQuaternion, rotVecValues);
-					SensorManager.getRotationMatrixFromVector(orientationMatrix, rotVecValues);
+				if (mRotVecValues != null) {
+					SensorManager.getQuaternionFromVector(mRotationQuaternion, mRotVecValues);
+					SensorManager.getRotationMatrixFromVector(orientationMatrix, mRotVecValues);
 					mRotationMatrix = orientationMatrix;
 				}
 				float[] invertMatrix = new float[16];
@@ -171,13 +173,13 @@ public class SphereRenderer implements IGLTextureRenderer, SensorEventListener {
 			}
 
 			if (mIsGyroTrackingEnabled) {
-				for (int i = 0; i < rotVecValues.length; i++) {
-					rotVecValues[i] = event.values[i];
+				for (int i = 0; i < mRotVecValues.length; i++) {
+					mRotVecValues[i] = event.values[i];
 				}
 
-				if (rotVecValues != null) {
-					SensorManager.getQuaternionFromVector(rotationQuaternion, rotVecValues);
-					SensorManager.getRotationMatrixFromVector(mRotationMatrix, rotVecValues);
+				if (mRotVecValues != null) {
+					SensorManager.getQuaternionFromVector(mRotationQuaternion, mRotVecValues);
+					SensorManager.getRotationMatrixFromVector(mRotationMatrix, mRotVecValues);
 				}
 			}
 		}
