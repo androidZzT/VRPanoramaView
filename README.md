@@ -3,9 +3,11 @@ ZPanoramaView
 一款显示全景图的控件，纯手撸制造，目前还没有自己的repo，后续会完善
 如果这个控件对你有帮助，赏个星吧~
 
-*单个全景图展示*
+*单个全景图展示*  
+![单个全景图](./1.gif)
 
-*全景图列表展示*
+*全景图列表展示*  
+![全景图列表](./2.gif)
 
 ##### 使用说明
 
@@ -20,8 +22,8 @@ ZPanoramaView
 
 2.控件提供的方法
 
-> 1.提供图片url，加载渲染全景图 #setBitmapUrl(String url)
-> 2.恢复初始角度 #reCenter()
+> 1.提供图片url，加载渲染全景图 #setBitmapUrl(String url)  
+> 2.恢复初始角度 #reCenter()  
 > 3.开关陀螺仪 #setGyroTrackingEnabled(boolean enable)
 
 后续还会增加手势拖拽全景图功能
