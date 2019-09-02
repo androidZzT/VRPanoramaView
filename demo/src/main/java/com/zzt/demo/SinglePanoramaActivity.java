@@ -48,4 +48,5 @@ public class SinglePanoramaActivity extends AppCompatActivity {
 		mBtnGyroController.setTag(enable);
 		mPanoramaTextureView.setGyroTrackingEnabled(enable);
 	}
+
 }

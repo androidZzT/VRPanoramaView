@@ -1,4 +1,4 @@
-package com.zzt.panorama.renderer;
+package com.zzt.panorama.cg;
 
 import android.graphics.Bitmap;
 import android.opengl.GLES20;

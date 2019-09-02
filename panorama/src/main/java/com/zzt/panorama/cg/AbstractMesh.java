@@ -1,4 +1,4 @@
-package com.zzt.panorama.model;
+package com.zzt.panorama.cg;
 
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;

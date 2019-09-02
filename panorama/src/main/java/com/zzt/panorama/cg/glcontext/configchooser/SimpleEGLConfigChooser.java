@@ -1,4 +1,4 @@
-package com.zzt.panorama.glcontext.configchooser;
+package com.zzt.panorama.cg.glcontext.configchooser;
 
 /**
  * Created by Android_ZzT on 2018/10/19.

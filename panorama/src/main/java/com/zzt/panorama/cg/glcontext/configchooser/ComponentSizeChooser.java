@@ -1,4 +1,4 @@
-package com.zzt.panorama.glcontext.configchooser;
+package com.zzt.panorama.cg.glcontext.configchooser;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;

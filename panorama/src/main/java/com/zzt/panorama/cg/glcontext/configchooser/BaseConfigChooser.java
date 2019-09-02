@@ -1,4 +1,4 @@
-package com.zzt.panorama.glcontext.configchooser;
+package com.zzt.panorama.cg.glcontext.configchooser;
 
 import android.opengl.EGL14;
 import android.opengl.EGLExt;

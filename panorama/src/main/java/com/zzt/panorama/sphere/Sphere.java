@@ -1,6 +1,6 @@
 package com.zzt.panorama.sphere;
 
-import com.zzt.panorama.model.AbstractMesh;
+import com.zzt.panorama.cg.AbstractMesh;
 import com.zzt.panorama.util.ListBuilder;
 import com.zzt.panorama.util.OpenGLUtil;
 

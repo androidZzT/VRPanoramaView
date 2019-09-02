@@ -13,7 +13,7 @@ import android.util.Log;
 import android.view.TextureView;
 import android.widget.FrameLayout;
 
-import com.zzt.panorama.renderer.GLProducerThread;
+import com.zzt.panorama.cg.GLProducerThread;
 import com.zzt.panorama.sphere.SphereRenderer;
 import com.zzt.panorama.util.ImageUtil;
 import com.zzt.panorama.util.LogHelper;
@@ -161,7 +161,6 @@ public class ZPanoramaTextureView extends FrameLayout implements TextureView.Sur
 
 	@Override
 	public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) { //detached 以后再 attached 还会回调此方法
-		Log.e(TAG, "onSurfaceTextureAvailable: ");
 		if (!mIsGLThreadAvailable) { //确保从后台回来的时候只调用一次
 			mIsGLThreadAvailable = true;
 			mGLThread = new GLProducerThread(surface, mRenderer, new AtomicBoolean(true));

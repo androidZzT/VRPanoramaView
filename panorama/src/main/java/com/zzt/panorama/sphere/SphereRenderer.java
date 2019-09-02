@@ -10,18 +10,18 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 
 import com.zzt.panorama.R;
-import com.zzt.panorama.renderer.Camera;
-import com.zzt.panorama.renderer.IGLTextureRenderer;
-import com.zzt.panorama.renderer.Shader;
-import com.zzt.panorama.renderer.Texture;
+import com.zzt.panorama.cg.Camera;
+import com.zzt.panorama.cg.IGLTextureRenderer;
+import com.zzt.panorama.cg.Shader;
+import com.zzt.panorama.cg.Texture;
 import com.zzt.panorama.util.OpenGLUtil;
 
 import java.lang.ref.WeakReference;
 
 import static android.hardware.SensorManager.SENSOR_DELAY_FASTEST;
-import static com.zzt.panorama.model.AbstractMesh.COORDINATES_PER_COLOR;
-import static com.zzt.panorama.model.AbstractMesh.COORDINATES_PER_TEXTURE_COORDINATES;
-import static com.zzt.panorama.model.AbstractMesh.COORDINATES_PER_VERTEX;
+import static com.zzt.panorama.cg.AbstractMesh.COORDINATES_PER_COLOR;
+import static com.zzt.panorama.cg.AbstractMesh.COORDINATES_PER_TEXTURE_COORDINATES;
+import static com.zzt.panorama.cg.AbstractMesh.COORDINATES_PER_VERTEX;
 
 /**
  * Created by Android_ZzT on 2018/8/1.

@@ -1,11 +1,9 @@
-package com.zzt.panorama.glcontext.configchooser;
+package com.zzt.panorama.cg.glcontext.configchooser;
 
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 
 import com.zzt.panorama.util.LogHelper;
-
-import java.util.logging.Logger;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;

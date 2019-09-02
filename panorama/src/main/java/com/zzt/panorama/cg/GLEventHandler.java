@@ -1,4 +1,4 @@
-package com.zzt.panorama.renderer;
+package com.zzt.panorama.cg;
 
 import java.util.LinkedList;
 
