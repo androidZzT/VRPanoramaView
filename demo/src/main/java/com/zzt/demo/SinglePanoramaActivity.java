@@ -15,7 +15,7 @@ import com.zzt.panorama.ZPanoramaTextureView;
 public class SinglePanoramaActivity extends AppCompatActivity {
 
 	private static final String TAG = SinglePanoramaActivity.class.getSimpleName();
-	private static final String IMAGE_URL = "https://d147wy1xnm9vni.cloudfront.net/jrtBOYwNIfKgmbc-lEqbsg/thumbnails/360_180_source_150.jpg-video.vr.medium";
+	private static final String IMAGE_URL = "https://d22779be5rhkgh.cloudfront.net/_w9QbsGPj6JmY8pdkR2Pjw/thumbnails/360_180_source_102.jpg-video.vr.medium";
 
 	private FrameLayout mPanoramaContainer;
 	private ZPanoramaTextureView mPanoramaTextureView;

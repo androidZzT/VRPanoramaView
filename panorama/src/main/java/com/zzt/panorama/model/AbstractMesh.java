@@ -1,11 +1,5 @@
 package com.zzt.panorama.model;
 
-import android.content.Context;
-
-import com.zzt.panorama.renderer.Shader;
-import com.zzt.panorama.renderer.Texture;
-
-import java.lang.ref.WeakReference;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
@@ -14,18 +8,9 @@ import java.nio.ShortBuffer;
  */
 public abstract class AbstractMesh {
 
-	protected static int COORDINATES_PER_VERTEX = 3;
-	protected static int COORDINATES_PER_COLOR = 4;
-	protected static int COORDINATES_PER_TEXTURE_COORDINATES = 2;
-
-	/**
-	 * attach vertexShader and fragmentShader
-	 */
-	protected int mProgramHandle;
-
-	protected int mVertexShaderHandle;
-
-	protected int mFragmentShaderHandle;
+	public static final int COORDINATES_PER_VERTEX = 3;
+	public static final int COORDINATES_PER_COLOR = 4;
+	public static final int COORDINATES_PER_TEXTURE_COORDINATES = 2;
 
 	protected FloatBuffer mVertexBuffer;
 
@@ -35,34 +20,19 @@ public abstract class AbstractMesh {
 
 	protected ShortBuffer mIndicesBuffer;
 
-	protected Shader mVertexShader;
-
-	protected Shader mFragmentShader;
-
-	protected Texture mTexture;
-
-	protected WeakReference<Context> mContextWeakReference;
-
-	public void init(Context context) {
-		mContextWeakReference = new WeakReference<>(context);
+	public FloatBuffer getVertexBuffer() {
+		return mVertexBuffer;
 	}
 
-	public void destroy() {
-		mContextWeakReference.clear();
+	public FloatBuffer getColorBuffer() {
+		return mColorBuffer;
 	}
 
-	/**
-	 * 绘画每一帧
-	 *
-	 * @param MVPMatrix 最终计算出来的 Model View Projection Matrix
-	 */
-	public abstract void drawFrame(float[] MVPMatrix);
-
-	public void setTexture(Texture texture) {
-		if (texture.isAvailable()) {
-			mTexture = texture;
-		}
+	public FloatBuffer getTextureCoordinatesBuffer() {
+		return mTextureCoordinatesBuffer;
 	}
 
-
+	public ShortBuffer getIndicesBuffer() {
+		return mIndicesBuffer;
+	}
 }

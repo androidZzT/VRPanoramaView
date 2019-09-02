@@ -1,10 +1,7 @@
-package com.zzt.panorama.model;
+package com.zzt.panorama.sphere;
 
-import android.content.Context;
-import android.opengl.GLES20;
-
-import com.zzt.panorama.R;
-import com.zzt.panorama.renderer.Shader;
+import com.zzt.panorama.model.AbstractMesh;
+import com.zzt.panorama.util.ListBuilder;
 import com.zzt.panorama.util.OpenGLUtil;
 
 import java.util.ArrayList;
@@ -24,16 +21,16 @@ public class Sphere extends AbstractMesh {
 	private float[] mPositionFloats;
 	private float[] mColorFloats;
 	private float[] mTextureFloats;
-	private short[] mIndiceShorts;
+	private short[] mIndicesShorts;
 
 	private Sphere() {
 
 	}
 
 	public Sphere(float radius,
-	              int widthSegments, int heightSegments,
-	              double phiStart, double phiLength,
-	              double thetaStart, double thetaLength) {
+				  int widthSegments, int heightSegments,
+				  double phiStart, double phiLength,
+				  double thetaStart, double thetaLength) {
 		generate(radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength);
 	}
 
@@ -110,57 +107,11 @@ public class Sphere extends AbstractMesh {
 		mTextureFloats = OpenGLUtil.toPrimitiveArray(mTextureCoordinates.list, float[].class);
 		mTextureCoordinatesBuffer = OpenGLUtil.floatArray2FloatBuffer(mTextureFloats);
 
-		mIndiceShorts = OpenGLUtil.toPrimitiveArray(mIndices.list, short[].class);
-		mIndicesBuffer = OpenGLUtil.shortArray2ShortBuffer(mIndiceShorts);
+		mIndicesShorts = OpenGLUtil.toPrimitiveArray(mIndices.list, short[].class);
+		mIndicesBuffer = OpenGLUtil.shortArray2ShortBuffer(mIndicesShorts);
 	}
 
-	@Override
-	public void init(Context context) {
-		super.init(context);
-		mVertexShaderHandle = OpenGLUtil.loadAndCompileShader(mContextWeakReference.get(), R.raw.sphere_vertex_shader, GLES20.GL_VERTEX_SHADER);
-		mVertexShader = new Shader();
-
-		mFragmentShaderHandle = OpenGLUtil.loadAndCompileShader(mContextWeakReference.get(), R.raw.sphere_fragment_shader, GLES20.GL_FRAGMENT_SHADER);
-		mFragmentShader = new Shader();
-
-		mProgramHandle = OpenGLUtil.createAndLinkProgram(mVertexShaderHandle, mFragmentShaderHandle,
-				new String[]{"a_Position", "a_Color", "a_TexCoordinate"});
-	}
-
-	@Override
-	public void drawFrame(float[] MVPMatrix) {
-		GLES20.glUseProgram(mProgramHandle);
-
-		mVertexShader.bindVertexBuffer(mProgramHandle, "a_Position", COORDINATES_PER_VERTEX, mVertexBuffer);
-		mVertexShader.bindColorBuffer(mProgramHandle, "a_Color", COORDINATES_PER_COLOR, mColorBuffer);
-		mVertexShader.bindTextureCoordinatesBuffer(mProgramHandle, "a_TextureCoordinates", COORDINATES_PER_TEXTURE_COORDINATES, mTextureCoordinatesBuffer);
-
-		mFragmentShader.bindTextureSampler2D(mProgramHandle, "u_Texture", mTexture.getTextureName());
-
-		mVertexShader.bindMVPMatrix(mProgramHandle, "u_MVPMatrix", MVPMatrix);
-
-		mTexture.bindSampler(mFragmentShader.getTextureSamplerHandle());
-
-		GLES20.glDrawElements(GLES20.GL_TRIANGLES, mIndiceShorts.length, GLES20.GL_UNSIGNED_SHORT, mIndicesBuffer);
-
-		mVertexShader.disableAllAttrbHandle();
-	}
-
-	public void reCompileShaderAndLinkProgram() {
-		mVertexShaderHandle = OpenGLUtil.loadAndCompileShader(mContextWeakReference.get(), R.raw.sphere_vertex_shader, GLES20.GL_VERTEX_SHADER);
-		mFragmentShaderHandle = OpenGLUtil.loadAndCompileShader(mContextWeakReference.get(), R.raw.sphere_fragment_shader, GLES20.GL_FRAGMENT_SHADER);
-		mProgramHandle = OpenGLUtil.createAndLinkProgram(mVertexShaderHandle, mFragmentShaderHandle,
-				new String[]{"a_Position", "a_Color", "a_TexCoordinate"});
-	}
-
-	private class ListBuilder<T> {
-		public final ArrayList<T> list = new ArrayList<>();
-
-		@SafeVarargs
-		final public void add(T... items) {
-			for (T item : items) {
-				list.add(item);
-			}
-		}
+	short[] getIndicesShortArray() {
+		return mIndicesShorts;
 	}
 }

@@ -27,7 +27,7 @@ public class GLProducerThread extends Thread {
 	//constructor
 	private AtomicBoolean mShouldRender;
 	private SurfaceTexture mSurfaceTexture;
-	private ITextureRenderer mTextureRenderer;
+	private IGLTextureRenderer mTextureRenderer;
 	private int mRenderMode;
 
 	//EGL context
@@ -44,7 +44,7 @@ public class GLProducerThread extends Thread {
 
 	private boolean mIsPaused;
 
-	public GLProducerThread(SurfaceTexture surfaceTexture, ITextureRenderer textureRenderer, AtomicBoolean shouldRender) {
+	public GLProducerThread(SurfaceTexture surfaceTexture, IGLTextureRenderer textureRenderer, AtomicBoolean shouldRender) {
 		mSurfaceTexture = surfaceTexture;
 		mTextureRenderer = textureRenderer;
 		mShouldRender = shouldRender;
@@ -65,20 +65,15 @@ public class GLProducerThread extends Thread {
 
 	public void onPause() {
 		mIsPaused = true;
-		mTextureRenderer.onPause();
 	}
 
 	public void onResume() {
 		mIsPaused = false;
-		enqueueEvent(() ->
-				mTextureRenderer.onResume()
-		);
 		requestRender();
 	}
 
 	public void onDestroy() {
 		enqueueEvent(() -> {
-			mTextureRenderer.onDestroy();
 			destroyGL();
 			setShouldRender(false);
 		});
@@ -91,7 +86,7 @@ public class GLProducerThread extends Thread {
 		}
 	}
 
-	public void releaseSurfaceTexture() {
+	public void releaseEglContext() {
 		mEgl.eglDestroyContext(mEGLDisplay, mEGLContext); //重要！！！ 先释放 EGLContext
 		mEgl.eglDestroySurface(mEGLDisplay, mEglSurface); //再释放 EglSurface，SurfaceTexture 才能被释放，否则内存一直涨
 	}
@@ -128,7 +123,7 @@ public class GLProducerThread extends Thread {
 	public void run() {
 		try {
 			initGL();
-			mTextureRenderer.onSurfaceCreated();
+			mTextureRenderer.onGLContextAvailable();
 
 			while (mShouldRender != null && mShouldRender.get() != false) {
 //			LogHelper.i(TAG, "-------- " + getName() + " running ---------");

@@ -5,14 +5,14 @@ import android.graphics.Bitmap;
 /**
  * Created by Android_ZzT on 2018/8/6.
  */
-public interface ITextureRenderer {
+public interface IGLTextureRenderer {
 
 	/**
 	 * <pre>
 	 * Surface创建好之后
 	 * </pre>
 	 */
-	void onSurfaceCreated();
+	void onGLContextAvailable();
 
 	/**
 	 * <pre>
@@ -31,33 +31,11 @@ public interface ITextureRenderer {
 	 */
 	void onDrawFrame();
 
-	/**
-	 * <pre>
-	 * Activity的onResume时的操作
-	 * </pre>
-	 */
-	void onResume();
+	void onAttached();
 
-	/**
-	 * <pre>
-	 * Activity的onPause时的操作
-	 * </pre>
-	 */
-	void onPause();
-
-	/**
-	 * <pre>
-	 * Activity的onDestroy时的操作
-	 * </pre>
-	 */
-	void onDestroy();
+	void onDetached();
 
 	void loadBitmap(Bitmap bitmap);
 
 	void changeTextureBitmap(Bitmap bitmap);
-
-	void bindTexture();
-
-	void unBindTexture();
-
 }
