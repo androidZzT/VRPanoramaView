@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	public void GotoPanoramaList(View v) {
-
+		Intent intent = new Intent(this, PanoramaListActivity.class);
+		startActivity(intent);
 	}
 }

@@ -59,7 +59,7 @@ public class SphereRenderer implements IGLTextureRenderer, SensorEventListener {
 	private Sensor mSensor;
 
 	private boolean mFirstFrameFlag = true;
-	private boolean mIsGyroTrackingEnabled;
+	private boolean mIsGyroTrackingEnabled = true;
 	private float[] mRotVecValues = null;
 	private float[] mRotationQuaternion = new float[4];
 

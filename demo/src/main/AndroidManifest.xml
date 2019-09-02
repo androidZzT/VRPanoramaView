@@ -22,6 +22,9 @@
 		<activity
 			android:name = ".SinglePanoramaActivity"
 			android:screenOrientation = "portrait" />
+		<activity
+			android:name = ".PanoramaListActivity"
+			android:screenOrientation = "portrait" />
 	</application>
 
 	<uses-permission android:name = "android.permission.INTERNET" />
