@@ -1,7 +1,5 @@
 ZPanoramaView
 ---
-一款显示全景图的控件，纯手撸制造，目前还没有自己的repo，后续会完善
-如果这个控件对你有帮助，赏个星吧~
 
 *单个全景图展示*  
 ![单个全景图](./1.gif)
@@ -11,7 +9,11 @@ ZPanoramaView
 
 ##### 使用说明
 
-由于还没有创建 repo，如果有急用的同学，可以先clone项目，然后将panorama模块拷到自己的工程，依赖模块后使用 ZPanoramaView 即可。
+dependencies {
+  ...
+  //当前版本 1.0.1，可持续关注 github 上的 release 版本
+  implementation "com.github.androidZzT:VRPanoramaView:1.0.1" 
+}
 
 ##### 支持功能
 
