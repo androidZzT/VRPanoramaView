@@ -18,13 +18,13 @@ allprojects {
     repositories {
         google()
         jcenter()
-        
+        maven { url 'https://jitpack.io' }
     }
 }
 
 ext {
     sdkgroup = "com.github.zzt"
-    sdkversion = "1.0.0"
+    sdkversion = "1.0.1"
 
     compileSdkVersion = 28
     targetSdkVersion = 28
