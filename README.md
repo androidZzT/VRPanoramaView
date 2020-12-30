@@ -9,11 +9,13 @@ ZPanoramaView
 
 ##### 使用说明
 
+```
 dependencies {
   ...
   //当前版本 1.0.1，可持续关注 github 上的 release 版本
   implementation "com.github.androidZzT:VRPanoramaView:1.0.1" 
 }
+```
 
 ##### 支持功能
 
